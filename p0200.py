@@ -16,46 +16,44 @@ Find the 200th prime-proof sqube containing the contiguous sub-string "200".
 """
 
 from timeit import default_timer
+from bitarray import *
 
 start = default_timer()
 
+def set qubes():
+    pass
 
-def rd(x, width=0):
-    return "{:,}".format(x).ljust(width)
+def primes(limit):
+    # bits = 65_536 # upper limit on primes
+    bits = limit  # upper limit on primes
+    ini = 1
+    myArray = makeBitArray(bits, ini)
+    # * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    # 0 and 1 are not prime, and not included in the Sieve of Eratosthenes:
+    bit = 0
+    clearBit(myArray, bit)
+    bit = 1
+    clearBit(myArray, bit)
+
+    for index in range(int(math.sqrt(limit))):
+        if testBit(myArray, index):
+            zeroBit = index * index  # prime squared is lowest multiple left
+
+            while zeroBit < bits:
+                clearBit(myArray, zeroBit)
+                zeroBit += index
+
+    count = 0
+    for index in range(bits):
+        if testBit(myArray, index):
+            count += 1
+            if count % 20 == 0:
+                print()
+            print("{:,}".format(index), end=" ")
 
 
-def loop():
-    blue_disks = 0
-    total_disks = 2
-    prev_total_disks = 0
-
-    f_total_disks = total_disks * (total_disks - 1)
-    f_blue_disks = blue_disks * (blue_disks - 1)
-
-    while True:
-        while f_total_disks > 2 * f_blue_disks:
-            blue_disks += 1
-            f_blue_disks = blue_disks * (blue_disks - 1)
-
-        if f_total_disks == 2 * f_blue_disks:
-            execution_time = default_timer() - start
-            print(execution_time, "seconds; #disks:", rd(total_disks, 22), "; #blue:", rd(blue_disks, 13))
-            if prev_total_disks:
-                ratio = total_disks / prev_total_disks
-                prev_total_disks = total_disks
-
-                total_disks = int(ratio * total_disks)
-                f_total_disks = total_disks * (total_disks - 1)
-
-                blue_disks = int(ratio * blue_disks)
-                f_blue_disks = blue_disks * (blue_disks - 1)
-                continue
-            else:
-                prev_total_disks = total_disks
-
-        total_disks += 1
-        f_total_disks = total_disks * (total_disks - 1)
-
+def prime_proof():
+    pass
 
 if __name__ == "__main__":
-    loop()
+    primes(1000000)
